@@ -1,4 +1,5 @@
 # terraform-aws-lambda-baseline
+[![Terraform Checks](https://github.com/sixfourtwelve/terraform-aws-lambda-baseline/actions/workflows/terraform-checks.yml/badge.svg)](https://github.com/sixfourtwelve/terraform-aws-lambda-baseline/actions/workflows/terraform-checks.yml)
 
 A Terraform module that provisions a baseline AWS Lambda setup, including an IAM execution role, a Secrets Manager secret, and a CloudWatch log group — all wired together with least-privilege IAM policies.
 

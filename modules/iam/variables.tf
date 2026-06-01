@@ -13,3 +13,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "extra_iam_policy_arns" {
+  type        = list(string)
+  default     = []
+  description = "Any extra AWS managed policies to attach"
+}

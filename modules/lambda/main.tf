@@ -11,7 +11,8 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      SECRET_ARN = var.secret_arn
+      SECRET_ARN     = var.secret_arn
+      LOG_GROUP_NAME = var.log_group_name
     }
   }
 

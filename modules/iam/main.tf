@@ -35,7 +35,9 @@ resource "aws_iam_policy" "this" {
   })
 }
 
-resource "iam_role_policy_attachment" "cloudwatch" {
+resource "aws_iam_role_policy_attachment" "extra" {
+  for_each = toset(var.extra_iam_policy_arns)
+
   role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.this.arn
+  policy_arn = each.value
 }

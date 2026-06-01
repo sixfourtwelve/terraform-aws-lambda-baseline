@@ -9,18 +9,18 @@ variable "environment" {
 }
 
 variable "lambda_runtime" {
-  type        = string
-  default     = "python3.12"
+  type    = string
+  default = "python3.12"
 }
 
 variable "lambda_memory_mb" {
-  type        = number
-  default     = 512
+  type    = number
+  default = 512
 }
 
 variable "lambda_timeout_seconds" {
-  type        = number
-  default     = 30
+  type    = number
+  default = 30
 }
 
 variable "lambda_zip_path" {
@@ -35,8 +35,8 @@ variable "secret_value" {
 }
 
 variable "log_retention_days" {
-  type        = number
-  default     = 30
+  type    = number
+  default = 30
 }
 
 variable "extra_iam_policy_arns" {

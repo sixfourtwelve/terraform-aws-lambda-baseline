@@ -38,3 +38,8 @@ variable "tags" {
   description = "Tags to apply to lambda"
   default     = {}
 }
+
+variable "log_group_name" {
+  type        = string
+  description = "Name of CloudWatch log group to allow access to from IAM role"
+}

@@ -19,6 +19,14 @@ locals {
   })
 }
 
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  prefix             = local.prefix
+  log_retention_days = var.log_retention_days
+  tags               = local.common_tags
+}
+
 module "secret" {
   source = "./modules/secret"
 

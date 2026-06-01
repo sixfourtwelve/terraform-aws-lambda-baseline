@@ -1,16 +1,20 @@
 resource "aws_secretsmanager_secret" "this" {
-  name = "${var.prefix}-secret"
+  for_each = nonsensitive(toset(keys(var.secrets)))
+
+  name = "${var.prefix}-${each.key}"
   tags = var.tags
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
-  for_each      = var.secrets
+  for_each = nonsensitive(toset(keys(var.secrets)))
+
   secret_id     = aws_secretsmanager_secret.this[each.key].id
-  secret_string = each.value.value
+  secret_string = var.secrets[each.key].value
 }
 
 resource "aws_secretsmanager_secret_policy" "this" {
-  for_each   = var.secrets
+  for_each = nonsensitive(toset(keys(var.secrets)))
+
   secret_arn = aws_secretsmanager_secret.this[each.key].arn
 
   policy = jsonencode({

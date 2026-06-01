@@ -6,8 +6,8 @@ output "lambda_name" {
   value = module.lambda.name
 }
 
-output "secret_arn" {
-  value = module.secret.secret_arn
+output "secret_arns" {
+  value = module.secret.secret_arns
 }
 
 output "log_group_name" {

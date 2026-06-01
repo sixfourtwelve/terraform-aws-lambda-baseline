@@ -4,12 +4,14 @@ resource "aws_secretsmanager_secret" "this" {
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
-  secret_id     = aws_secretsmanager_secret.this.id
-  secret_string = var.secret_value
+  for_each      = var.secrets
+  secret_id     = aws_secretsmanager_secret.this[each.key].id
+  secret_string = each.value.value
 }
 
 resource "aws_secretsmanager_secret_policy" "this" {
-  secret_arn = aws_secretsmanager_secret.this.arn
+  for_each   = var.secrets
+  secret_arn = aws_secretsmanager_secret.this[each.key].arn
 
   policy = jsonencode({
     Version = "2012-10-17"

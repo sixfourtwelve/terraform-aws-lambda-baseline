@@ -19,12 +19,13 @@ locals {
   })
 }
 
-module "cloudwatch" {
-  source = "./modules/cloudwatch"
+module "secret" {
+  source = "./modules/secret"
 
-  prefix             = local.prefix
-  log_retention_days = var.log_retention_days
-  tags               = local.common_tags
+  prefix       = local.prefix
+  secrets      = var.secrets
+  iam_role_arn = module.iam.role_arn
+  tags         = local.common_tags
 }
 
 module "iam" {
@@ -32,29 +33,22 @@ module "iam" {
 
   prefix                = local.prefix
   cloudwatch_log_group  = module.cloudwatch.log_group_arn
+  secret_arns           = values(module.secret.secret_arns) # map => list
   extra_iam_policy_arns = var.extra_iam_policy_arns
   tags                  = local.common_tags
-}
-
-module "secret" {
-  source = "./modules/secret"
-
-  prefix       = local.prefix
-  secret_value = var.secret_value
-  iam_role_arn = module.iam.role_arn # IAM output feeds into secret policy
-  tags         = local.common_tags
 }
 
 module "lambda" {
   source = "./modules/lambda"
 
-  prefix          = local.prefix
-  runtime         = var.lambda_runtime
-  memory_mb       = var.lambda_memory_mb
-  timeout_seconds = var.lambda_timeout_seconds
-  zip_path        = var.lambda_zip_path
-  iam_role_arn    = module.iam.role_arn
-  secret_arn      = module.secret.secret_arn
-  log_group_name  = module.cloudwatch.log_group_name
-  tags            = local.common_tags
+  prefix                = local.prefix
+  runtime               = var.lambda_runtime
+  memory_mb             = var.lambda_memory_mb
+  timeout_seconds       = var.lambda_timeout_seconds
+  zip_path              = var.lambda_zip_path
+  iam_role_arn          = module.iam.role_arn
+  secret_arns           = module.secret.secret_arns
+  environment_variables = var.environment_variables
+  log_group_name        = module.cloudwatch.log_group_name
+  tags                  = local.common_tags
 }

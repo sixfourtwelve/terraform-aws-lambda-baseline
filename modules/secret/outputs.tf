@@ -1,3 +1,3 @@
 output "secret_arn" {
-  value = aws_secretsmanager_secret.this.arn
+  value = { for k, v in aws_secretsmanager_secret.this : k => v.arn }
 }

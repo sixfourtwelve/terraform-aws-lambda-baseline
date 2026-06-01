@@ -19,3 +19,9 @@ variable "extra_iam_policy_arns" {
   default     = []
   description = "Any extra AWS managed policies to attach"
 }
+
+variable "secret_arns" {
+  type        = list(string)
+  default     = []
+  description = "ARNs of secrets to allow access to from IAM role"
+}

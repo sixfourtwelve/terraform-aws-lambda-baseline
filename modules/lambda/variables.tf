@@ -28,9 +28,14 @@ variable "iam_role_arn" {
   description = "ARN of IAM role for lambda to assume"
 }
 
-variable "secret_arn" {
-  type        = string
-  description = "ARN of secret to access from lambda"
+variable "environment_variables" {
+  type    = map(string)
+  default = {}
+}
+
+variable "secret_arns" {
+  type    = map(string)
+  default = {}
 }
 
 variable "tags" {

@@ -28,10 +28,20 @@ variable "lambda_zip_path" {
   description = "Local path to the zipped lambda code"
 }
 
-variable "secret_value" {
-  type        = string
+variable "environment_variables" {
+  type        = map(string)
+  default     = {}
+  description = "Plain text env vars passed to the lambda"
+}
+
+variable "secrets" {
+  type = map(object({
+    value       = string
+    description = string
+  }))
+  default     = {}
   sensitive   = true
-  description = "The secret payload to store"
+  description = "Map of secrets to create. Key becomes part of the secret name."
 }
 
 variable "log_retention_days" {

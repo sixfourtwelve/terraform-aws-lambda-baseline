@@ -19,6 +19,7 @@ locals {
   })
 }
 
+# Create the CloudWatch log group first
 module "cloudwatch" {
   source = "./modules/cloudwatch"
 
@@ -27,6 +28,17 @@ module "cloudwatch" {
   tags               = local.common_tags
 }
 
+# Create IAM role for Lambda after CloudWatch
+module "iam" {
+  source = "./modules/iam"
+
+  prefix                = local.prefix
+  cloudwatch_log_group  = module.cloudwatch.log_group_arn
+  extra_iam_policy_arns = var.extra_iam_policy_arns
+  tags                  = local.common_tags
+}
+
+# Create secrets after IAM role is available
 module "secret" {
   source = "./modules/secret"
 
@@ -36,16 +48,7 @@ module "secret" {
   tags         = local.common_tags
 }
 
-module "iam" {
-  source = "./modules/iam"
-
-  prefix                = local.prefix
-  cloudwatch_log_group  = module.cloudwatch.log_group_arn
-  secret_arns           = values(module.secret.secret_arns) # map => list
-  extra_iam_policy_arns = var.extra_iam_policy_arns
-  tags                  = local.common_tags
-}
-
+# Create Lambda last, using all previously created resources
 module "lambda" {
   source = "./modules/lambda"
 

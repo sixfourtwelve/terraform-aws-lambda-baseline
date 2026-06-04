@@ -1,50 +1,51 @@
 variable "prefix" {
   type        = string
-  description = "Env prefix eg dev, staging or prod"
+  description = "Prefix for naming resources"
 }
 
 variable "runtime" {
-  type        = string
-  description = "Lambda runtime eg nodejs18.x"
+  type    = string
+  default = "python3.12"
 }
 
 variable "memory_mb" {
-  type        = number
-  description = "Lambda memory in MB"
+  type    = number
+  default = 512
 }
 
 variable "timeout_seconds" {
-  type        = number
-  description = "Lambda timeout in seconds"
+  type    = number
+  default = 30
 }
 
 variable "zip_path" {
   type        = string
-  description = "Path to lambda zip file"
+  description = "Local path to the zipped lambda code"
 }
 
 variable "iam_role_arn" {
   type        = string
-  description = "ARN of IAM role for lambda to assume"
-}
-
-variable "environment_variables" {
-  type    = map(string)
-  default = {}
+  description = "ARN of the IAM role for the Lambda function"
 }
 
 variable "secret_arns" {
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
+  description = "Map of secret ARNs to make available to the Lambda"
 }
 
-variable "tags" {
+variable "environment_variables" {
   type        = map(string)
-  description = "Tags to apply to lambda"
   default     = {}
+  description = "Plain text env vars passed to the lambda"
 }
 
 variable "log_group_name" {
   type        = string
-  description = "Name of CloudWatch log group to allow access to from IAM role"
+  description = "Name of the CloudWatch log group"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags applied to every resource"
 }

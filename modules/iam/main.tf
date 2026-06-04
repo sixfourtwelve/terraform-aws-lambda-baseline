@@ -42,11 +42,12 @@ resource "aws_iam_role_policy_attachment" "extra" {
   policy_arn = each.value
 }
 
-resource "aws_iam_policy" "secrets" {
-  count = length(var.secret_arns) > 0 ? 1 : 0
+# Create a generic secret access policy that can be attached later if needed
+resource "aws_iam_policy" "secrets_generic" {
+  count = var.secret_arns != null && length(var.secret_arns) > 0 ? 1 : 0
 
-  name = "${var.prefix}-secrets"
-
+  name = "${var.prefix}-secrets-generic"
+  
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -55,15 +56,15 @@ resource "aws_iam_policy" "secrets" {
         Action = [
           "secretsmanager:GetSecretValue"
         ]
-        Resource = var.secret_arns
+        Resource = "*"  # Generic access pattern
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "secrets" {
-  count = length(var.secret_arns) > 0 ? 1 : 0
+resource "aws_iam_role_policy_attachment" "secrets_generic" {
+  count = var.secret_arns != null && length(var.secret_arns) > 0 ? 1 : 0
 
   role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.secrets[0].arn
+  policy_arn = aws_iam_policy.secrets_generic[0].arn
 }

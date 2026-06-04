@@ -1,12 +1,6 @@
 variable "prefix" {
-  description = "A consistent name prefix for all resources in this module"
   type        = string
-}
-
-variable "tags" {
-  description = "Tags to apply to the secret"
-  type        = map(string)
-  default     = {}
+  description = "Prefix for naming resources"
 }
 
 variable "secrets" {
@@ -14,10 +8,17 @@ variable "secrets" {
     value       = string
     description = string
   }))
-  sensitive = true
+  default     = {}
+  sensitive   = true
+  description = "Map of secrets to create. Key becomes part of the secret name."
 }
 
 variable "iam_role_arn" {
-  description = "ARN of IAM role to allow access to this secret"
   type        = string
+  description = "ARN of the IAM role that will access these secrets"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags applied to every resource"
 }

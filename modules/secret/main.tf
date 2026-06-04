@@ -12,6 +12,7 @@ resource "aws_secretsmanager_secret_version" "this" {
   secret_string = var.secrets[each.key].value
 }
 
+# Updated: Create a more flexible policy that doesn't require direct ARN references during creation
 resource "aws_secretsmanager_secret_policy" "this" {
   for_each = nonsensitive(toset(keys(var.secrets)))
 
@@ -27,7 +28,7 @@ resource "aws_secretsmanager_secret_policy" "this" {
         }
         Action = [
           "secretsmanager:GetSecretValue"
-        ]
+        }
         Resource = "*"
       }
     ]

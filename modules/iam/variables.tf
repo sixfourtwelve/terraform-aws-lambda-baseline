@@ -1,17 +1,17 @@
 variable "prefix" {
-  description = "A consistent name prefix for all resources in this module"
   type        = string
+  description = "Prefix for naming resources"
 }
 
 variable "cloudwatch_log_group" {
-  description = "ARN of CloudWatch log group to allow access to from IAM role"
   type        = string
+  description = "ARN of the CloudWatch log group"
 }
 
-variable "tags" {
-  description = "Tags to apply to IAM role and policies"
-  type        = map(string)
-  default     = {}
+variable "secret_arns" {
+  type        = list(string)
+  default     = []
+  description = "List of secret ARNs to grant access to"
 }
 
 variable "extra_iam_policy_arns" {
@@ -20,8 +20,7 @@ variable "extra_iam_policy_arns" {
   description = "Any extra AWS managed policies to attach"
 }
 
-variable "secret_arns" {
-  type        = list(string)
-  default     = []
-  description = "ARNs of secrets to allow access to from IAM role"
+variable "tags" {
+  type        = map(string)
+  description = "Tags applied to every resource"
 }

@@ -55,6 +55,24 @@ variable "extra_iam_policy_arns" {
   description = "Any extra AWS managed policies to attach"
 }
 
+variable "secret_recovery_window_days" {
+  type        = number
+  default     = 30
+  description = "Days before a deleted secret can be permanently removed. Set to 0 in dev/test to allow immediate recreation."
+}
+
+variable "lambda_tracing_mode" {
+  type        = string
+  default     = "PassThrough"
+  description = "X-Ray tracing mode for the Lambda function: PassThrough or Active"
+}
+
+variable "lambda_reserved_concurrency" {
+  type        = number
+  default     = -1
+  description = "Reserved concurrent executions for the Lambda. -1 means unreserved (uses account default). 0 disables the function."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

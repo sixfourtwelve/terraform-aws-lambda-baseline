@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "this" {
-  name              = "${var.prefix}-log-group"
+  name              = "/aws/lambda/${var.prefix}-lambda"
   retention_in_days = var.log_retention_days
   tags              = var.tags
 }

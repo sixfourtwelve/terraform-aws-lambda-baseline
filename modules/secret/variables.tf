@@ -13,9 +13,10 @@ variable "secrets" {
   description = "Map of secrets to create. Key becomes part of the secret name."
 }
 
-variable "iam_role_arn" {
-  type        = string
-  description = "ARN of the IAM role that will access these secrets"
+variable "recovery_window_days" {
+  type        = number
+  default     = 30
+  description = "Days before a deleted secret can be permanently removed. Set to 0 to disable recovery (useful in dev/test)."
 }
 
 variable "tags" {

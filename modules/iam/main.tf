@@ -17,8 +17,9 @@ resource "aws_iam_role" "this" {
   tags = var.tags
 }
 
-resource "aws_iam_policy" "this" {
+resource "aws_iam_policy" "cloudwatch" {
   name = "${var.prefix}-cloudwatch"
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -35,36 +36,38 @@ resource "aws_iam_policy" "this" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "extra" {
-  for_each = toset(var.extra_iam_policy_arns)
-
+resource "aws_iam_role_policy_attachment" "cloudwatch" {
   role       = aws_iam_role.this.name
-  policy_arn = each.value
+  policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-# Create a generic secret access policy that can be attached later if needed
-resource "aws_iam_policy" "secrets_generic" {
-  count = var.secret_arns != null && length(var.secret_arns) > 0 ? 1 : 0
+resource "aws_iam_policy" "secrets" {
+  count = length(var.secret_arns) > 0 ? 1 : 0
 
-  name = "${var.prefix}-secrets-generic"
-  
+  name = "${var.prefix}-secrets"
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = [
-          "secretsmanager:GetSecretValue"
-        ]
-        Resource = "*"  # Generic access pattern
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue"]
+        Resource = var.secret_arns
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "secrets_generic" {
-  count = var.secret_arns != null && length(var.secret_arns) > 0 ? 1 : 0
+resource "aws_iam_role_policy_attachment" "secrets" {
+  count = length(var.secret_arns) > 0 ? 1 : 0
 
   role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.secrets_generic[0].arn
+  policy_arn = aws_iam_policy.secrets[0].arn
+}
+
+resource "aws_iam_role_policy_attachment" "extra" {
+  for_each = toset(var.extra_iam_policy_arns)
+
+  role       = aws_iam_role.this.name
+  policy_arn = each.value
 }

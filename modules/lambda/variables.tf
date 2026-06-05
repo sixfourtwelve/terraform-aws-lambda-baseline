@@ -45,6 +45,18 @@ variable "log_group_name" {
   description = "Name of the CloudWatch log group"
 }
 
+variable "tracing_mode" {
+  type        = string
+  default     = "PassThrough"
+  description = "X-Ray tracing mode for the Lambda function: PassThrough or Active"
+}
+
+variable "reserved_concurrency" {
+  type        = number
+  default     = -1
+  description = "Reserved concurrent executions. -1 means unreserved (uses account default). 0 disables the function."
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags applied to every resource"

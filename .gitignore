@@ -10,3 +10,10 @@ override.tf.json
 *_override.tf.json
 .terraformrc
 terraform.rc
+
+# Test artifacts
+tests/ministack/fixture.zip
+tests/ministack/.terraform/
+tests/ministack/.terraform.lock.hcl
+tests/ministack/terraform.tfstate
+tests/ministack/terraform.tfstate.backup

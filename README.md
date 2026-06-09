@@ -112,6 +112,42 @@ module "my_lambda" {
 | `log_group_name` | Name of the CloudWatch log group |
 | `iam_role_arn` | ARN of the Lambda IAM execution role |
 
+## Local integration testing
+
+The repo ships a full integration test suite that runs Terraform against
+[MiniStack](https://ministack.org/) — a free, MIT-licensed AWS emulator
+(drop-in LocalStack alternative) that supports Lambda, IAM, Secrets Manager,
+and CloudWatch Logs out of the box.
+
+**Prerequisites:** Docker (Colima, Docker Desktop, etc.), `docker-compose`,
+`terraform`, `aws` CLI, `python3`, `zip`.
+
+```bash
+./scripts/test-ministack.sh
+```
+
+The script will:
+1. Build a minimal Lambda zip from `tests/ministack/fixture/`
+2. Start MiniStack on port 4566 (stopped automatically on exit)
+3. Run `terraform apply` against it
+4. Assert every resource — Lambda config, IAM trust policy, CloudWatch
+   retention, Secrets Manager values, secret ARN env vars, and a live Lambda
+   invocation
+5. `terraform destroy` and stop MiniStack
+
+To reuse an already-running MiniStack container:
+
+```bash
+MINISTACK_RUNNING=1 ./scripts/test-ministack.sh
+```
+
+To run against a remote MiniStack (e.g. in CI with the container on a
+different host):
+
+```bash
+MINISTACK_ENDPOINT=http://ministack:4566 MINISTACK_RUNNING=1 ./scripts/test-ministack.sh
+```
+
 ## Notes
 
 - **Handler:** hardcoded to `index.handler`. Ensure your deployment package exposes this entrypoint.
